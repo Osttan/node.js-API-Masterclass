@@ -1,3 +1,4 @@
+import { ErrorResponse } from '../utils/errorResponse.js';
 import { Bootcamp } from '../models/Bootcamp.js';
 
 // @desc      Get all bootcamps
@@ -22,12 +23,17 @@ export async function getBootcamp(req, res, next) {
     const bootcamp = await Bootcamp.findById(req.params.id);
 
     if (!bootcamp) {
-      return res.status(400).json({ success: false });
+      return next(
+        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+      );
     }
 
     res.status(200).json({ success: true, data: bootcamp });
   } catch (err) {
-    res.status(400).json({ success: false });
+    // res.status(400).json({ success: false });
+    next(
+      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
   }
 }
 
